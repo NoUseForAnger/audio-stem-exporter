@@ -2,12 +2,12 @@
   "name": "obs-mp3-writer",
   "displayName": "Audio Stem Exporter for OBS",
   "version": "1.0.0",
-  "author": "",
-  "website": "",
-  "email": "",
+  "author": "Catch22 / 1134 Digital LLC",
+  "website": "https://1134.digital/tools",
+  "email": "tools@1134.digital",
   "platformConfig": {
     "macos": {
-      "bundleId": "com.example.obs-mp3-writer"
+      "bundleId": "digital.1134.audio-stem-exporter"
     }
   },
   "dependencies": {
