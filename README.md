@@ -89,4 +89,4 @@ See [LICENSE](LICENSE) for details.
 
 ---
 
-Created by Catch22 for [1134.digital](https://1134.digital)
+Built with ❤️ by [Catch22](https://github.com/NoUseForAnger) · [1134.digital](https://1134.digital)
