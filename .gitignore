@@ -1,0 +1,31 @@
+# Build output
+build_x64/
+build/
+out/
+
+# Downloaded dependencies (rebuilt by cmake --preset)
+.deps/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+
+# Claude Code
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Installer output (distributed as GitHub Release assets, not tracked in git)
+installer/*.exe
+installer/*.zip

@@ -1,0 +1,42 @@
+{
+  "name": "obs-mp3-writer",
+  "displayName": "Audio Stem Exporter for OBS",
+  "version": "1.0.0",
+  "author": "",
+  "website": "",
+  "email": "",
+  "platformConfig": {
+    "macos": {
+      "bundleId": "com.example.obs-mp3-writer"
+    }
+  },
+  "dependencies": {
+    "obs-studio": {
+      "version": "32.1.1",
+      "baseUrl": "https://github.com/obsproject/obs-studio/archive/refs/tags",
+      "label": "OBS Studio sources",
+      "hashes": {
+        "macos": "8df772feae7efbf6e36fd38205e95bbc691f588be2705949226c34ba9f036b10",
+        "windows-x64": "8df772feae7efbf6e36fd38205e95bbc691f588be2705949226c34ba9f036b10"
+      }
+    },
+    "prebuilt": {
+      "version": "2025-08-23",
+      "baseUrl": "https://github.com/obsproject/obs-deps/releases/download",
+      "label": "Pre-Built obs-deps",
+      "hashes": {
+        "macos": "8de229cff6f1981508c0eb646b35e644633a5855787b9f5d3b90ae2aeb87ffc1",
+        "windows-x64": "8de229cff6f1981508c0eb646b35e644633a5855787b9f5d3b90ae2aeb87ffc1"
+      }
+    },
+    "qt6": {
+      "version": "2025-08-23",
+      "baseUrl": "https://github.com/obsproject/obs-deps/releases/download",
+      "label": "Pre-Built Qt6",
+      "hashes": {
+        "macos": "c62e82483bc7c0bf199e8ac3220c66a85a6e8a0cd69a05b6d44f873b830e415f",
+        "windows-x64": "c62e82483bc7c0bf199e8ac3220c66a85a6e8a0cd69a05b6d44f873b830e415f"
+      }
+    }
+  }
+}
