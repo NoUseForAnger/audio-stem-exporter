@@ -29,11 +29,13 @@ jobs:
       - name: Build
         run: cmake --build --preset windows-x64
 
-      - name: Install
-        run: cmake --install build_x64 --prefix dist --config RelWithDebInfo
-
       - name: Package ZIP
-        run: Compress-Archive -Path dist\* -DestinationPath "AudioStemExporter-${{ github.ref_name }}-Windows-x64.zip"
+        run: |
+          New-Item -ItemType Directory -Force -Path pkg\obs-plugins\64bit | Out-Null
+          New-Item -ItemType Directory -Force -Path pkg\data\obs-plugins\${{ env.PLUGIN_NAME }}\locale | Out-Null
+          Copy-Item build_x64\RelWithDebInfo\${{ env.PLUGIN_NAME }}.dll pkg\obs-plugins\64bit\
+          Copy-Item data\locale\en-US.ini pkg\data\obs-plugins\${{ env.PLUGIN_NAME }}\locale\
+          Compress-Archive -Path pkg\* -DestinationPath "AudioStemExporter-${{ github.ref_name }}-Windows-x64.zip"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -44,7 +46,7 @@ jobs:
   # ── macOS universal ───────────────────────────────────────────────────────────
   build-macos:
     name: macOS (universal)
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
       - name: Checkout
@@ -56,11 +58,13 @@ jobs:
       - name: Build
         run: cmake --build --preset macos
 
-      - name: Install
-        run: cmake --install build_macos --prefix dist --config RelWithDebInfo
-
       - name: Package ZIP
-        run: zip -r "AudioStemExporter-${{ github.ref_name }}-macOS.zip" dist/
+        run: |
+          mkdir -p pkg/obs-plugins/64bit
+          mkdir -p pkg/data/obs-plugins/${{ env.PLUGIN_NAME }}/locale
+          cp build_macos/RelWithDebInfo/${{ env.PLUGIN_NAME }}.dylib pkg/obs-plugins/64bit/
+          cp data/locale/en-US.ini pkg/data/obs-plugins/${{ env.PLUGIN_NAME }}/locale/
+          zip -r "AudioStemExporter-${{ github.ref_name }}-macOS.zip" pkg/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
