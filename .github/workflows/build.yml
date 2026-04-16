@@ -1,18 +1,20 @@
-name: Build obs-mp3-writer
+name: Build Audio Stem Exporter
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+'       # e.g. 1.0.0  → triggers release build
+      - '[0-9]+.[0-9]+.[0-9]+'       # e.g. 1.0.0
       - '[0-9]+.[0-9]+.[0-9]+-*'     # e.g. 1.0.0-beta1
   pull_request:
-    branches: [main]
+    branches: [master]
 
 env:
   PLUGIN_NAME: obs-mp3-writer
 
 jobs:
+
+  # ── Windows x64 ──────────────────────────────────────────────────────────────
   build-windows:
     name: Windows x64
     runs-on: windows-2022
@@ -23,40 +25,82 @@ jobs:
         with:
           submodules: recursive
 
-      # The obs-plugintemplate CI helper downloads OBS + deps and configures CMake.
-      # See: https://github.com/obsproject/obs-plugintemplate
       - name: Setup OBS build environment
         uses: obsproject/obs-plugintemplate/.github/actions/setup-obs@main
 
-      - name: Configure (RelWithDebInfo)
+      - name: Configure
         run: cmake --preset windows-x64
 
       - name: Build
         run: cmake --build --preset windows-x64
 
-      # ── Artifact for non-release builds ─────────────────────────────────────
-      - name: Package (zip)
-        if: "!startsWith(github.ref, 'refs/tags/')"
-        run: |
-          cmake --install build_x64 --prefix dist --config RelWithDebInfo
-          Compress-Archive -Path dist\* -DestinationPath "${{ env.PLUGIN_NAME }}-${{ github.sha }}-windows.zip"
+      - name: Install
+        run: cmake --install build_x64 --prefix dist --config RelWithDebInfo
+
+      - name: Package ZIP
+        run: Compress-Archive -Path dist\* -DestinationPath "AudioStemExporter-${{ github.ref_name }}-Windows-x64.zip"
 
       - name: Upload artifact
-        if: "!startsWith(github.ref, 'refs/tags/')"
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PLUGIN_NAME }}-${{ github.sha }}-windows
-          path: ${{ env.PLUGIN_NAME }}-${{ github.sha }}-windows.zip
+          name: windows-zip
+          path: AudioStemExporter-${{ github.ref_name }}-Windows-x64.zip
 
-      # ── Installer for tagged releases (Batch C: Inno Setup via CPack) ───────
-      # Uncomment when buildspec.json hashes are filled in and CPack is configured:
-      # - name: Build installer
-      #   if: startsWith(github.ref, 'refs/tags/')
-      #   run: cmake --build --preset windows-x64 --target package
-      #
-      # - name: Create GitHub release
-      #   if: startsWith(github.ref, 'refs/tags/')
-      #   uses: softprops/action-gh-release@v2
-      #   with:
-      #     draft: true
-      #     files: build_x64/*.exe
+  # ── macOS (universal) ─────────────────────────────────────────────────────────
+  build-macos:
+    name: macOS (universal)
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup OBS build environment
+        uses: obsproject/obs-plugintemplate/.github/actions/setup-obs@main
+
+      - name: Configure
+        run: cmake --preset macos
+
+      - name: Build
+        run: cmake --build --preset macos
+
+      - name: Install
+        run: cmake --install build_macos --prefix dist --config RelWithDebInfo
+
+      - name: Package ZIP
+        run: zip -r "AudioStemExporter-${{ github.ref_name }}-macOS.zip" dist/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-zip
+          path: AudioStemExporter-${{ github.ref_name }}-macOS.zip
+
+  # ── GitHub Release (tags only) ────────────────────────────────────────────────
+  release:
+    name: Create Release
+    needs: [build-windows, build-macos]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-zip
+
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-zip
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          generate_release_notes: false
+          files: |
+            AudioStemExporter-${{ github.ref_name }}-Windows-x64.zip
+            AudioStemExporter-${{ github.ref_name }}-macOS.zip
