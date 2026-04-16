@@ -4,8 +4,8 @@ on:
   push:
     branches: [master]
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+'       # e.g. 1.0.0
-      - '[0-9]+.[0-9]+.[0-9]+-*'     # e.g. 1.0.0-beta1
+      - '[0-9]+.[0-9]+.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+-*'
   pull_request:
     branches: [master]
 
@@ -22,11 +22,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Setup OBS build environment
-        uses: obsproject/obs-plugintemplate/.github/actions/setup-obs@main
 
       - name: Configure
         run: cmake --preset windows-x64
@@ -46,7 +41,7 @@ jobs:
           name: windows-zip
           path: AudioStemExporter-${{ github.ref_name }}-Windows-x64.zip
 
-  # ── macOS (universal) ─────────────────────────────────────────────────────────
+  # ── macOS universal ───────────────────────────────────────────────────────────
   build-macos:
     name: macOS (universal)
     runs-on: macos-14
@@ -54,11 +49,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Setup OBS build environment
-        uses: obsproject/obs-plugintemplate/.github/actions/setup-obs@main
 
       - name: Configure
         run: cmake --preset macos
