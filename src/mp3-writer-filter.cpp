@@ -130,8 +130,17 @@ void mw_stop_all()
 		stop_recording(f);
 }
 
-void mw_start_recording_one(MwFilter *f) { start_recording(f); }
-void mw_stop_recording_one(MwFilter *f)  { stop_recording(f);  }
+void mw_start_recording_one(MwFilter *f)
+{
+	start_recording(f);
+	obs_source_update_properties(f->context);
+}
+
+void mw_stop_recording_one(MwFilter *f)
+{
+	stop_recording(f);
+	obs_source_update_properties(f->context);
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Filename helpers
@@ -701,11 +710,9 @@ static void start_recording(MwFilter *f)
 	f->worker = std::thread(worker_loop, f);
 	f->active.store(true, std::memory_order_release);
 
-	// Update status text and refresh properties panel
 	obs_data_t *settings = obs_source_get_settings(f->context);
 	obs_data_set_string(settings, S_STATUS, "Recording");
 	obs_data_release(settings);
-	obs_source_update_properties(f->context);
 
 	blog(LOG_INFO, "[obs-mp3-writer] Recording started");
 }
@@ -725,7 +732,6 @@ static void stop_recording(MwFilter *f)
 	obs_data_t *settings = obs_source_get_settings(f->context);
 	obs_data_set_string(settings, S_STATUS, "Idle");
 	obs_data_release(settings);
-	obs_source_update_properties(f->context);
 
 	blog(LOG_INFO, "[obs-mp3-writer] Recording stopped");
 }
