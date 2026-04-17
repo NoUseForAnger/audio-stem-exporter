@@ -4,7 +4,9 @@ Record any OBS audio source directly to **MP3, WAV, or AIFF** in real time — n
 
 > The only OBS plugin that writes MP3 directly. No post-processing, no DAW, no conversion step. Hit record, get an MP3.
 
-> **Got an older PC or Mac that can't record video?** Audio Stem Exporter has an incredibly light footprint — no video encoding, no heavy processing. If your machine can run OBS, it can run this.
+> 🎧 **Perfect for DJ laptops** — Running Rekordbox, Serato, or Traktor while streaming on the same machine? There's no headroom left for video recording. Audio Stem Exporter captures your mix as a high-quality MP3 with barely any CPU overhead — so you never lose a set.
+
+> 🖥️ **Can't stream and record video at the same time?** Audio Stem Exporter uses a fraction of the resources of video recording. No encoding, no heavy processing — if your PC or Mac can run OBS, it can run this. Capture your audio stems while you stream, no matter how old your hardware is.
 
 ---
 
