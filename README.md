@@ -40,9 +40,11 @@ Record any OBS audio source directly to **MP3, WAV, or AIFF** in real time — n
 
 | | File |
 |---|---|
-| **Windows Installer (recommended)** | [AudioStemExporter-1.0.0-Windows-x64-Setup.exe](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest) |
-| **Windows ZIP (manual)** | [AudioStemExporter-1.0.0-Windows-x64.zip](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest) |
-| **macOS** | Coming soon |
+| **Windows Installer (recommended)** | [AudioStemExporter-Windows-x64-Setup.exe](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest) |
+| **Windows ZIP (manual)** | [AudioStemExporter-Windows-x64.zip](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest) |
+| **macOS PKG (recommended)** | [AudioStemExporter-macOS.pkg](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest) |
+| **macOS ZIP (manual)** | [AudioStemExporter-macOS.zip](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest) |
+| **Linux x86_64** | [AudioStemExporter-Linux-x86_64.zip](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest) |
 
 **Requires:** OBS Studio 30+
 
@@ -95,7 +97,7 @@ Wherever you set the output folder in the filter settings. Default is your Video
 Yes — set the trigger to Follow Streaming and it auto-starts with your stream.
 
 **Is Mac supported?**
-The source code is cross-platform. Mac binary coming soon.
+Yes — download the macOS PKG or ZIP from the [releases page](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest).
 
 ---
 
