@@ -35,6 +35,18 @@
         "ENABLE_FRONTEND_API":         "ON",
         "ENABLE_QT":                   "ON"
       }
+    },
+    {
+      "name": "linux-x86_64",
+      "displayName": "Linux x86_64",
+      "description": "Build Audio Stem Exporter for Linux x86_64",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build_linux",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":   "RelWithDebInfo",
+        "ENABLE_FRONTEND_API": "ON",
+        "ENABLE_QT":           "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -55,6 +67,11 @@
       "displayName": "macOS RelWithDebInfo",
       "configurePreset": "macos",
       "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "linux-x86_64",
+      "displayName": "Linux x86_64 RelWithDebInfo",
+      "configurePreset": "linux-x86_64"
     }
   ]
 }
