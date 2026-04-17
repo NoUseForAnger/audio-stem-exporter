@@ -339,7 +339,7 @@ static bool ffmpeg_open_mp3(MwFilter *f, const std::string &path,
 		return false;
 	}
 	blog(LOG_INFO, "[obs-mp3-writer] MP3 encoder ready (%lld kbps)",
-	     f->codec_ctx->bit_rate / 1000);
+	     (long long)(f->codec_ctx->bit_rate / 1000));
 	avcodec_parameters_from_context(f->stream->codecpar, f->codec_ctx);
 	f->stream->time_base = f->codec_ctx->time_base;
 
