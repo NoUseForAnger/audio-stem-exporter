@@ -10,6 +10,17 @@ Record any OBS audio source directly to **MP3, WAV, or AIFF** in real time — n
 
 ---
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/images/stem-exporter-filter.png" alt="Filter panel showing active recording" width="600"/>
+</p>
+<p align="center">
+  <img src="docs/images/stem-exporter-dock.png" alt="Dock panel showing multiple sources" width="300"/>
+</p>
+
+---
+
 ## Features
 
 - **Direct to MP3** — no conversion, ever
