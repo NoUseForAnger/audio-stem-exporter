@@ -66,9 +66,11 @@ jobs:
 
       - name: Package ZIP
         run: |
+          DYLIB=$(find build_macos -name "${{ env.PLUGIN_NAME }}.dylib" | head -1)
+          echo "Found dylib at: $DYLIB"
           mkdir -p pkg/obs-plugins/64bit
           mkdir -p pkg/data/obs-plugins/${{ env.PLUGIN_NAME }}/locale
-          cp build_macos/RelWithDebInfo/${{ env.PLUGIN_NAME }}.dylib pkg/obs-plugins/64bit/
+          cp "$DYLIB" pkg/obs-plugins/64bit/
           cp data/locale/en-US.ini pkg/data/obs-plugins/${{ env.PLUGIN_NAME }}/locale/
           zip -r "AudioStemExporter-${{ github.ref_name }}-macOS.zip" pkg/
 
