@@ -45,7 +45,7 @@ Source: {#MyLocale}; DestDir: "{app}\data\obs-plugins\{#MyPluginID}\locale";   F
 Type: filesandordirs; Name: "{app}\data\obs-plugins\{#MyPluginID}"
 
 [Run]
-Filename: "{#MyAppURL}"; Description: "Visit 1134.digital/tools"; Flags: postinstall shellexec skipifsilent unchecked
+Filename: "{#MyAppURL}"; Description: "Visit 1134.digital/tools"; Flags: postinstall shellexec skipifsilent
 Filename: "https://ko-fi.com/catch22"; Description: "Buy me a Chai ☕🍵☕ — support development"; Flags: postinstall shellexec skipifsilent unchecked
 Filename: "https://www.paypal.biz/1134digital"; Description: "Support via PayPal 💸 — support development"; Flags: postinstall shellexec skipifsilent unchecked
 
