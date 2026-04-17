@@ -66,8 +66,8 @@ jobs:
 
       - name: Package ZIP
         run: |
-          cmake --install build_macos --prefix ./install --config RelWithDebInfo
-          zip -r "AudioStemExporter-${{ github.ref_name }}-macOS.zip" install/
+          cmake --install build_macos --prefix ./pkg --config RelWithDebInfo
+          cd pkg && zip -r "../AudioStemExporter-${{ github.ref_name }}-macOS.zip" .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
