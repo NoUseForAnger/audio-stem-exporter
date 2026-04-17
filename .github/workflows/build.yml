@@ -47,15 +47,16 @@ jobs:
   build-macos:
     name: macOS (universal)
     runs-on: macos-15
+    defaults:
+      run:
+        shell: zsh --no-rcs --errexit --pipefail {0}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: |
-          sudo xcode-select --switch /Applications/Xcode.app
-          xcodebuild -version
+      - name: Select Xcode 16.1
+        run: sudo xcode-select --switch /Applications/Xcode_16.1.0.app/Contents/Developer
 
       - name: Configure
         run: cmake --preset macos
