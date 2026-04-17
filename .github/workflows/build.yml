@@ -64,16 +64,27 @@ jobs:
       - name: Build
         run: cmake --build --preset macos
 
-      - name: Package ZIP
+      - name: Package ZIP and PKG
         run: |
           cmake --install build_macos --prefix ./pkg --config RelWithDebInfo
-          cd pkg && zip -r "../AudioStemExporter-${{ github.ref_name }}-macOS.zip" .
+          cd pkg && zip -r "../AudioStemExporter-${{ github.ref_name }}-macOS.zip" . && cd ..
+          pkgbuild --root ./pkg \
+                   --identifier digital.1134.audio-stem-exporter \
+                   --version ${{ github.ref_name }} \
+                   --install-location "/Library/Application Support/obs-studio/plugins" \
+                   "AudioStemExporter-${{ github.ref_name }}-macOS.pkg"
 
-      - name: Upload artifact
+      - name: Upload ZIP artifact
         uses: actions/upload-artifact@v4
         with:
           name: macos-zip
           path: AudioStemExporter-${{ github.ref_name }}-macOS.zip
+
+      - name: Upload PKG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-pkg
+          path: AudioStemExporter-${{ github.ref_name }}-macOS.pkg
 
   # ── GitHub Release (tags only) ────────────────────────────────────────────────
   release:
@@ -90,10 +101,15 @@ jobs:
         with:
           name: windows-zip
 
-      - name: Download macOS artifact
+      - name: Download macOS ZIP artifact
         uses: actions/download-artifact@v4
         with:
           name: macos-zip
+
+      - name: Download macOS PKG artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-pkg
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
@@ -103,3 +119,4 @@ jobs:
           files: |
             AudioStemExporter-${{ github.ref_name }}-Windows-x64.zip
             AudioStemExporter-${{ github.ref_name }}-macOS.zip
+            AudioStemExporter-${{ github.ref_name }}-macOS.pkg
