@@ -106,8 +106,8 @@ Yes — download the macOS PKG or ZIP from the [releases page](https://github.co
 
 ## License
 
-MIT License — Copyright (c) 2026 1134 Digital LLC
-See [LICENSE](LICENSE) for details.
+GPLv3 License — Copyright (c) 2026 1134 Digital LLC
+See [LICENSE](LICENSE) for details. Commercial licensing available — contact [1134.digital](https://1134.digital).
 
 ---
 
