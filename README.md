@@ -96,6 +96,9 @@ Wherever you set the output folder in the filter settings. Default is your Video
 **Does it work while streaming?**
 Yes — set the trigger to Follow Streaming and it auto-starts with your stream.
 
+**The plugin installed but doesn't show up in OBS.**
+The installer may have installed to the wrong OBS folder. If you have OBS in both `Program Files` and `Program Files (x86)`, the installer will now ask you which one to use. If you installed to the wrong location, run the installer again and choose the correct OBS folder — it should match where your OBS shortcut points.
+
 **Is Mac supported?**
 Yes — download the macOS PKG or ZIP from the [releases page](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest).
 

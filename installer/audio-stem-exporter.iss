@@ -52,23 +52,43 @@ Filename: "https://www.paypal.biz/1134digital"; Description: "Support via PayPal
 [Code]
 
 // ── Auto-detect OBS install directory ────────────────────────────────────────
-function GetOBSDir: String;
-var
-  RegPath: String;
-begin
-  RegPath := '';
-  if RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\OBS Studio',
-                         'InstallLocation', RegPath) then
-  begin
-    Result := RegPath;
-    Exit;
-  end;
-  Result := ExpandConstant('{autopf}\obs-studio');
-end;
-
 procedure InitializeWizard();
+var
+  Path64, Path86: String;
+  Chosen: String;
 begin
-  WizardForm.DirEdit.Text := GetOBSDir();
+  Path64 := '';
+  Path86 := '';
+
+  // Check 64-bit registry (Program Files)
+  RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\OBS Studio',
+                      'InstallLocation', Path64);
+
+  // Check 32-bit registry (Program Files (x86))
+  RegQueryStringValue(HKLM, 'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\OBS Studio',
+                      'InstallLocation', Path86);
+
+  // If both found and different, ask user to pick
+  if (Path64 <> '') and (Path86 <> '') and (Lowercase(Path64) <> Lowercase(Path86)) then
+  begin
+    if MsgBox('Two OBS Studio installations were found:' + #13#10#13#10 +
+              '  [1] ' + Path64 + #13#10 +
+              '  [2] ' + Path86 + #13#10#13#10 +
+              'Click YES to install into [1] (Program Files).' + #13#10 +
+              'Click NO to install into [2] (Program Files (x86)).',
+              mbConfirmation, MB_YESNO) = IDYES then
+      Chosen := Path64
+    else
+      Chosen := Path86;
+  end
+  else if Path64 <> '' then
+    Chosen := Path64
+  else if Path86 <> '' then
+    Chosen := Path86
+  else
+    Chosen := ExpandConstant('{autopf}\obs-studio');
+
+  WizardForm.DirEdit.Text := Chosen;
 end;
 
 // ── Warn if OBS is running ────────────────────────────────────────────────────
