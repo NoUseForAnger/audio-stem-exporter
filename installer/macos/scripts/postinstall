@@ -1,0 +1,4 @@
+#!/bin/bash
+# Strip macOS quarantine flag so OBS can load the plugin without Gatekeeper blocking it.
+xattr -dr com.apple.quarantine "/Library/Application Support/obs-studio/plugins/obs-mp3-writer" 2>/dev/null || true
+exit 0

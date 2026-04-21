@@ -68,7 +68,9 @@ jobs:
         run: |
           cmake --install build_macos --prefix ./pkg --config RelWithDebInfo
           cd pkg && zip -r "../AudioStemExporter-${{ github.ref_name }}-macOS.zip" . && cd ..
+          chmod +x installer/macos/scripts/postinstall
           pkgbuild --root ./pkg \
+                   --scripts installer/macos/scripts \
                    --identifier digital.1134.audio-stem-exporter \
                    --version ${{ github.ref_name }} \
                    --install-location "/Library/Application Support/obs-studio/plugins" \
