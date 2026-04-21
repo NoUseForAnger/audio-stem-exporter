@@ -29,6 +29,7 @@ Record any OBS audio source directly to **MP3, WAV, or AIFF** in real time — n
 - **WAV and AIFF** also supported
 - **Works on any OBS audio source** — mic, browser, media, desktop audio
 - **Record multiple sources simultaneously** — each gets its own file
+- **Stack formats on one source** — add the filter twice to the same source to get MP3 and WAV at the same time, from a single recording pass
 - **Follow Recording mode** — auto-starts and stops with OBS recording
 - **Follow Streaming mode** — auto-starts and stops with OBS stream
 - **Qt dock panel** — see all sources and control them from one place
@@ -89,6 +90,9 @@ Check that the audio source is actually routed and active in OBS — make sure i
 
 **Can I record multiple sources at once?**
 Yes — add the filter to each source. Each gets its own file. Use the dock panel to control them all from one place.
+
+**Can I get multiple formats from the same source at the same time?**
+Yes — add the filter more than once to the same source, set each instance to a different format. For example: one instance set to MP3 320kbps for archiving, another set to WAV for editing. Both record simultaneously from a single pass — no extra CPU cost for the audio capture itself.
 
 **Where does the file get saved?**
 Wherever you set the output folder in the filter settings. Default is your Videos folder (Windows) or Movies folder (Mac).

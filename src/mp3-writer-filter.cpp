@@ -185,17 +185,19 @@ static std::string build_output_path(MwFilter *f)
 #else
 	localtime_r(&t, &tm_buf);
 #endif
-	char date[16], timebuf[16];
+	char date[16], dateeu[16], timebuf[16];
 	strftime(date,    sizeof(date),    "%Y-%m-%d", &tm_buf);
+	strftime(dateeu,  sizeof(dateeu),  "%y%m%d",   &tm_buf);
 	strftime(timebuf, sizeof(timebuf), "%H-%M-%S", &tm_buf);
 
 	obs_source_t *parent_src = obs_filter_get_parent(f->context);
 	const char *src = parent_src ? obs_source_get_name(parent_src)
 	                              : obs_source_get_name(f->context);
 	std::string result = f->filename_fmt;
-	replace_token(result, "%SRC%",  sanitize_for_path(src ? src : "source"));
-	replace_token(result, "%DATE%", date);
-	replace_token(result, "%TIME%", timebuf);
+	replace_token(result, "%SRC%",    sanitize_for_path(src ? src : "source"));
+	replace_token(result, "%DATE%",   date);
+	replace_token(result, "%DATEEU%", dateeu);
+	replace_token(result, "%TIME%",   timebuf);
 
 	std::string base = f->folder + "/" + result;
 	std::string path = base + "." + format_ext(f->format);
