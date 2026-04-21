@@ -60,6 +60,23 @@ Record any OBS audio source directly to **MP3, WAV, or AIFF** in real time — n
 2. Copy `data/obs-plugins/obs-mp3-writer/locale/en-US.ini` → same path in your OBS `data/` folder
 3. Restart OBS
 
+**macOS PKG (recommended):**
+1. Download the `.pkg` file from the releases page
+2. Double-click it and follow the installer — it handles everything including macOS security permissions
+3. Restart OBS
+4. The filter will appear under **Filters → Audio Stem Exporter**
+
+**macOS ZIP (manual):**
+1. Unzip the file
+2. Copy the `obs-mp3-writer` folder to `/Library/Application Support/obs-studio/plugins/`
+3. Open Terminal and run:
+   ```
+   sudo xattr -dr com.apple.quarantine "/Library/Application Support/obs-studio/plugins/obs-mp3-writer"
+   ```
+4. Restart OBS
+
+> **Note:** Always use the PKG on macOS — it handles the security step automatically. The ZIP requires the Terminal command above or the plugin won't load.
+
 ---
 
 ## How to Use
@@ -104,7 +121,14 @@ Yes — set the trigger to Follow Streaming and it auto-starts with your stream.
 The installer may have installed to the wrong OBS folder. If you have OBS in both `Program Files` and `Program Files (x86)`, the installer will now ask you which one to use. If you installed to the wrong location, run the installer again and choose the correct OBS folder — it should match where your OBS shortcut points.
 
 **Is Mac supported?**
-Yes — download the macOS PKG or ZIP from the [releases page](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest).
+Yes — download the macOS PKG from the [releases page](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest). Always use the PKG, not the ZIP — the PKG handles macOS security automatically so the plugin shows up in OBS. See the Installation section above for full instructions.
+
+**The plugin installed on Mac but doesn't show up in OBS.**
+You likely used the ZIP instead of the PKG. Either reinstall using the PKG, or open Terminal and run:
+```
+sudo xattr -dr com.apple.quarantine "/Library/Application Support/obs-studio/plugins/obs-mp3-writer"
+```
+Then restart OBS.
 
 ---
 
