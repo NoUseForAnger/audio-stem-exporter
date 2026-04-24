@@ -37,11 +37,21 @@ jobs:
           Copy-Item data\locale\en-US.ini pkg\data\obs-plugins\${{ env.PLUGIN_NAME }}\locale\
           Compress-Archive -Path pkg\* -DestinationPath "AudioStemExporter-${{ github.ref_name }}-Windows-x64.zip"
 
-      - name: Upload artifact
+      - name: Build Windows Installer
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\iscc.exe" /DMyAppVersion="${{ github.ref_name }}" installer\audio-stem-exporter.iss
+
+      - name: Upload ZIP artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-zip
           path: AudioStemExporter-${{ github.ref_name }}-Windows-x64.zip
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: installer\AudioStemExporter-${{ github.ref_name }}-Windows-x64-Setup.exe
 
   # ── macOS universal ───────────────────────────────────────────────────────────
   build-macos:
@@ -134,10 +144,15 @@ jobs:
       contents: write
 
     steps:
-      - name: Download Windows artifact
+      - name: Download Windows ZIP artifact
         uses: actions/download-artifact@v4
         with:
           name: windows-zip
+
+      - name: Download Windows installer artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
 
       - name: Download macOS ZIP artifact
         uses: actions/download-artifact@v4
@@ -160,6 +175,7 @@ jobs:
           draft: false
           generate_release_notes: false
           files: |
+            AudioStemExporter-${{ github.ref_name }}-Windows-x64-Setup.exe
             AudioStemExporter-${{ github.ref_name }}-Windows-x64.zip
             AudioStemExporter-${{ github.ref_name }}-macOS.zip
             AudioStemExporter-${{ github.ref_name }}-macOS.pkg

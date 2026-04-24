@@ -1,5 +1,7 @@
 #define MyAppName      "Audio Stem Exporter for OBS"
-#define MyAppVersion   "1.0.2"
+#ifndef MyAppVersion
+  #define MyAppVersion "1.0.0"
+#endif
 #define MyAppPublisher "1134.digital"
 #define MyAppURL       "https://1134.digital/tools"
 #define MyPluginID     "obs-mp3-writer"
