@@ -118,15 +118,19 @@ void mw_registry_snapshot(std::vector<MwFilter*> &out)
 
 void mw_start_all()
 {
-	std::lock_guard<std::mutex> lk(g_registry_mtx);
-	for (MwFilter *f : g_registry)
+	// Snapshot under lock, then operate without holding the lock
+	// (start_recording may join a thread — blocking with lock held risks deadlock)
+	std::vector<MwFilter*> snapshot;
+	{ std::lock_guard<std::mutex> lk(g_registry_mtx); snapshot = g_registry; }
+	for (MwFilter *f : snapshot)
 		start_recording(f);
 }
 
 void mw_stop_all()
 {
-	std::lock_guard<std::mutex> lk(g_registry_mtx);
-	for (MwFilter *f : g_registry)
+	std::vector<MwFilter*> snapshot;
+	{ std::lock_guard<std::mutex> lk(g_registry_mtx); snapshot = g_registry; }
+	for (MwFilter *f : snapshot)
 		stop_recording(f);
 }
 
@@ -199,10 +203,24 @@ static std::string build_output_path(MwFilter *f)
 	replace_token(result, "%DATEEU%", dateeu);
 	replace_token(result, "%TIME%",   timebuf);
 
-	std::string base = f->folder + "/" + result;
+	// Block path traversal — ensure final path stays inside the chosen folder
+	namespace fs = std::filesystem;
+	fs::path safe_folder = fs::weakly_canonical(fs::u8path(f->folder));
+	fs::path candidate   = fs::weakly_canonical(safe_folder / fs::u8path(result));
+	if (candidate.string().rfind(safe_folder.string(), 0) != 0) {
+		blog(LOG_ERROR, "[obs-mp3-writer] Path traversal blocked in filename format");
+		return "";
+	}
+
+	std::string base = (safe_folder / fs::u8path(result)).string();
 	std::string path = base + "." + format_ext(f->format);
-	for (int i = 1; std::filesystem::exists(path); ++i)
+	// Cap collision counter to prevent infinite loop / int overflow
+	for (int i = 1; i <= 9999 && std::filesystem::exists(path); ++i)
 		path = base + "_" + std::to_string(i) + "." + format_ext(f->format);
+	if (std::filesystem::exists(path)) {
+		blog(LOG_ERROR, "[obs-mp3-writer] Could not find unused filename after 9999 attempts");
+		return "";
+	}
 	return path;
 }
 
@@ -271,7 +289,10 @@ static bool ffmpeg_open_pcm(MwFilter *f, const std::string &path,
 		blog(LOG_ERROR, "[obs-mp3-writer] avcodec_open2 failed (%d)", ret);
 		return false;
 	}
-	avcodec_parameters_from_context(f->stream->codecpar, f->codec_ctx);
+	if (avcodec_parameters_from_context(f->stream->codecpar, f->codec_ctx) < 0) {
+		blog(LOG_ERROR, "[obs-mp3-writer] avcodec_parameters_from_context failed");
+		return false;
+	}
 	f->stream->time_base = f->codec_ctx->time_base;
 
 	if (!setup_swr(f, channels, sample_rate, AV_SAMPLE_FMT_S16))
@@ -342,7 +363,10 @@ static bool ffmpeg_open_mp3(MwFilter *f, const std::string &path,
 	}
 	blog(LOG_INFO, "[obs-mp3-writer] MP3 encoder ready (%lld kbps)",
 	     (long long)(f->codec_ctx->bit_rate / 1000));
-	avcodec_parameters_from_context(f->stream->codecpar, f->codec_ctx);
+	if (avcodec_parameters_from_context(f->stream->codecpar, f->codec_ctx) < 0) {
+		blog(LOG_ERROR, "[obs-mp3-writer] avcodec_parameters_from_context (mp3) failed");
+		return false;
+	}
 	f->stream->time_base = f->codec_ctx->time_base;
 
 	// FLTP → S16P (planar float → planar 16-bit; no layout change needed)
@@ -433,8 +457,9 @@ static void ffmpeg_close(MwFilter *f)
 								f->stream->time_base);
 							f->packet->stream_index =
 								f->stream->index;
-							av_interleaved_write_frame(
-								f->fmt_ctx, f->packet);
+							if (av_interleaved_write_frame(
+								f->fmt_ctx, f->packet) < 0)
+								blog(LOG_ERROR, "[obs-mp3-writer] write_frame failed at close");
 							av_packet_unref(f->packet);
 						}
 					}
@@ -775,7 +800,7 @@ static struct obs_audio_data *filter_audio(void *data,
 	for (int c = 0; c < ch; ++c)
 		if (audio->data[c])
 			memcpy(slot.data[c], audio->data[c],
-			       audio->frames * sizeof(float));
+			       slot.frames * sizeof(float)); // use clamped value, not raw audio->frames
 
 	f->ring_write.store(next, std::memory_order_release);
 	f->ring_cv.notify_one();
