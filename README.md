@@ -47,7 +47,7 @@ Record any OBS audio source directly to **MP3, WAV, or AIFF** in real time — n
 | **macOS ZIP (manual)** | [AudioStemExporter-macOS.zip](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest) |
 | **Linux x86_64** | [AudioStemExporter-Linux-x86_64.zip](https://github.com/NoUseForAnger/audio-stem-exporter/releases/latest) |
 
-**Requires:** OBS Studio 30+
+**Requires:** OBS Studio 31+
 
 ---
 
