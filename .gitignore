@@ -29,3 +29,17 @@ Thumbs.db
 # Installer output (distributed as GitHub Release assets, not tracked in git)
 installer/*.exe
 installer/*.zip
+
+# Debug output logs
+stderr.txt
+stdout.txt
+*.log
+
+# Template scaffold (not part of the project source)
+_tpl/
+
+# Internal planning docs
+docs/plans/
+
+# CMake auto-incremented build number (noisy diffs, not meaningful for releases)
+cmake/.CMakeBuildNumber
